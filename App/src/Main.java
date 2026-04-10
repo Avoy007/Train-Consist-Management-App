@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Bogie {
     private String name;
@@ -16,25 +17,30 @@ class Bogie {
     public int getCapacity() {
         return capacity;
     }
-
-    public void display() {
-        System.out.println(name + " Bogie - Capacity: " + capacity);
-    }
 }
 
-public class TrainConsistManagement {
+public class TrainConsistApp {
+
+    public static Map<String, List<Bogie>> groupBogies(List<Bogie> bogies) {
+        return bogies.stream()
+                .collect(Collectors.groupingBy(Bogie::getName));
+    }
+
     public static void main(String[] args) {
-        List<Bogie> bogieList = new ArrayList<>();
 
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 24));
+        List<Bogie> bogies = new ArrayList<>();
 
-        bogieList.sort(Comparator.comparingInt(Bogie::getCapacity));
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("Sleeper", 60));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-        System.out.println("Bogies Sorted by Capacity:\n");
-        for (Bogie b : bogieList) {
-            b.display();
+        Map<String, List<Bogie>> grouped = groupBogies(bogies);
+
+        System.out.println("Grouped Bogies:\n");
+
+        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue().size());
         }
     }
 }
